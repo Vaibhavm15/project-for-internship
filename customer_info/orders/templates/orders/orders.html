@@ -1,0 +1,83 @@
+
+<!doctype html>
+<html lang="en">
+  {% load static %}
+  <head>
+    <title>Orders</title>
+    <body>
+      <form action="{% url 'orders' %}" method="get">
+      	<input type='text' name='search' />
+        <input type="date"  name="from">
+        <input type="date"  name="to">
+      	<button type="submit">Search</button>
+      </form>
+      <table style="width:100%" id = "main_table">
+        <tr>
+          <th>Order Name</th>
+          <th>Company Name</th>
+          <th>Customer Name</th>
+          <th>Order Date</th>
+          <th>Amount</th>
+        </tr>
+        {% for order in orders %}
+        <tr>
+          <td>{{order.order_name}}</td>
+          <td>{{order.user_id.company_id.company_name}}</td>
+          <td>{{order.user_id.name}}</td>
+          <td>{{order.created_at}}</td>
+          <td>{{order.amount}}</td>
+        </tr>
+        {% endfor %}
+      </table>
+      <div class='pagination'>
+        <p>
+      	 {% if orders.has_previous %}
+      		 <a href='?page=1'> << </a>
+      		 <a href='?page={{orders.previous_page_number}}'> < </a>
+      	 {% endif %}
+
+      	{% for num in orders.paginator.page_range %}
+      		{% if orders.number == num %}
+      			<strong> {{ num }} </strong>
+
+      		{% endif %}
+      	{% endfor %}
+
+      	{% if orders.has_next %}
+      		<a href='?page={{ orders.next_page_number }}'> > </a>
+      		<a href='?page={{orders.paginator.num_pages}}'>>></a>
+      	{% endif %}
+      </p>
+      </div>
+
+      <style>
+
+        table {
+          border-collapse: collapse;
+          width: 100%;
+        }
+
+        th, td {
+          padding: 8px;
+          text-align: left;
+          border-bottom: 1px solid #ddd;
+        }
+
+        tr:nth-child(even) {background-color: #f2f2f2;}
+
+        strong {
+        display: inline-block;
+        width: 50px;
+        border: 1px solid #000;
+        text-align: center;
+        }
+
+        .pagination {
+            position: absolute;
+            left: 50%;
+        }
+
+      </style>
+    </body>
+  </head>
+</html>
